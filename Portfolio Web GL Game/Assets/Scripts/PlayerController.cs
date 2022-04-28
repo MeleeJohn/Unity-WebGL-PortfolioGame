@@ -1,12 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
 
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody playerRB;
     public int walkingMod;
     public GameObject playerCamera;
+    public int mouseSensitivity;
+    public float cameraRotY;
+    public float playerRotX;
     
     // Start is called before the first frame update
     void Start()
@@ -17,7 +23,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerRB.AddForce(-this.transform.up * 0.75f);
+        //playerRB.AddForce(-this.transform.up * 2f);
 
         if (Input.GetKey(KeyCode.W) && playerRB.velocity.magnitude < 10f)
         {
@@ -39,7 +45,16 @@ public class PlayerController : MonoBehaviour
             playerRB.AddForce(-this.transform.right * walkingMod);
         }
 
-        this.transform.Rotate(0, Input.GetAxis("Mouse X") * 1.5f, 0);
-        playerCamera.transform.Rotate(-Input.GetAxis("Mouse Y") * 1.5f,0,0);
+        //Player Left-Right rotation
+        //this.transform.Rotate(0, Input.GetAxis("Mouse X") * mouseSensitivity, 0);
+        playerRotX += Input.GetAxis("Mouse X") * mouseSensitivity;
+        transform.rotation = Quaternion.Euler(0f, playerRotX, 0f);
+
+        //Player camera Up-Down look
+        cameraRotY += -Input.GetAxis("Mouse Y") * mouseSensitivity;
+        cameraRotY = Mathf.Clamp(cameraRotY, -60f, 60f);
+        playerCamera.transform.localRotation = Quaternion.Euler(cameraRotY, 0f, 0f);
+              
     }
+
 }
